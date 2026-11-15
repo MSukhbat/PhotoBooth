@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="mn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Photobooth Camera System</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 25px;
+        background: #111318;
+        color: white;
+        font-family: Arial, sans-serif;
+      }
+
+      .container {
+        max-width: 1000px;
+        margin: auto;
+      }
+
+      h1 {
+        margin-bottom: 5px;
+      }
+      p {
+        color: #bbb;
+      }
+
+      .panel {
+        background: #20232b;
+        padding: 22px;
+        border-radius: 14px;
+        margin-top: 20px;
+      }
+
+      button,
+      select {
+        padding: 13px 18px;
+        border: 0;
+        border-radius: 8px;
+        font-size: 15px;
+        margin: 4px;
+      }
+
+      button {
+        background: #4776ed;
+        color: white;
+        cursor: pointer;
+      }
+
+      button:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+      }
+
+      select {
+        background: #333743;
+        color: white;
+      }
+
+      .cameras {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+
+      .camera {
+        padding: 20px 5px;
+        border-radius: 9px;
+        background: #363942;
+        text-align: center;
+      }
+
+      .camera.ready {
+        background: #126b4a;
+      }
+
+      .gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+      }
+
+      .photo img {
+        width: 100%;
+        display: block;
+        border-radius: 8px;
+      }
+
+      .photo p {
+        font-size: 13px;
+        margin: 7px 0;
+      }
+
+      #sessionId {
+        overflow-wrap: anywhere;
+        color: #93b4ff;
+      }
+
+      #capture {
+        width: 100%;
+        padding: 20px;
+        font-weight: bold;
+        font-size: 20px;
+      }
+
+      #status {
+        color: #b8d0ff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Photobooth Camera System</h1>
+      <p>Sequential / Simultaneous Capture Controller</p>
+
+      <div class="panel">
+        <h2>1. Create Session</h2>
+
+        <select id="mode">
+          <option value="sequential">Sequential — 1 Phone / 8 Photos</option>
+          <option value="simultaneous">
+            Simultaneous — 8 Phones / 1 Capture
+          </option>
+        </select>
+
+        <button id="create">Create Session</button>
+
+        <p>Session ID: <strong id="sessionId">Not created</strong></p>
+        <button id="copy" disabled>Copy Session ID</button>
+      </div>
+
+      <div class="panel">
+        <h2>2. Connected Cameras</h2>
+        <div class="cameras" id="cameras"></div>
+        <p id="status">Create a session first</p>
+      </div>
+
+      <div class="panel">
+        <h2>3. Capture</h2>
+        <button id="capture" disabled>CAPTURE</button>
+        <p id="progress">0 / 8 photos</p>
+      </div>
+
+      <div class="panel">
+        <h2>4. Captured Photos</h2>
+        <div class="gallery" id="gallery"></div>
+      </div>
+    </div>
+
+    <script>
+      const API = "http://localhost:3000";
+
+      let socket = null;
+      let sessionId = "";
+      let mode = "sequential";
+      let cameras = [];
+      let busy = false;
+      let completed = 0;
+      let currentRequest = 0;
+
+      const $ = (id) => document.getElementById(id);
+
+      function expectedCameras() {
+        return mode === "sequential" ? 1 : 8;
+      }
+
+      function maxCaptures() {
+        return mode === "sequential" ? 8 : 1;
+      }
+
+      function updateButton() {
+        const count = expectedCameras();
+        const ready = cameras.filter((c) => c.ready).length;
+
+        $("capture").disabled =
+          !socket ||
+          socket.readyState !== WebSocket.OPEN ||
+          busy ||
+          completed >= maxCaptures() ||
+          cameras.length !== count ||
+          ready !== count;
+
+        $("capture").textContent =
+          mode === "sequential"
+            ? `CAPTURE NEXT (${Math.min(completed + 1, 8)}/8)`
+            : "CAPTURE ALL 8 CAMERAS";
+      }
+
+      function renderCameras() {
+        $("cameras").innerHTML = "";
+
+        for (let i = 1; i <= expectedCameras(); i++) {
+          const id = `CAM${i}`;
+          const camera = cameras.find((c) => c.cameraId === id);
+
+          const div = document.createElement("div");
+
+          div.className = "camera" + (camera?.ready ? " ready" : "");
+
+          div.textContent = `${id} — ${
+            camera?.ready ? "READY" : camera ? "BUSY" : "OFFLINE"
+          }`;
+
+          $("cameras").appendChild(div);
+        }
+
+        updateButton();
+      }
+
+      async function loadPhotos() {
+        if (!sessionId) return;
+
+        const response = await fetch(`${API}/sessions/${sessionId}/photos`);
+
+        const photos = await response.json();
+
+        $("gallery").innerHTML = "";
+
+        for (const photo of photos) {
+          const div = document.createElement("div");
+          div.className = "photo";
+
+          const img = document.createElement("img");
+          img.src = API + photo.url;
+          img.alt = `${photo.cameraId} photo`;
+
+          const label = document.createElement("p");
+          label.textContent = `${photo.cameraId} — Shot ${photo.shotNumber}`;
+
+          div.append(img, label);
+          $("gallery").appendChild(div);
+        }
+
+        $("progress").textContent =
+          mode === "sequential"
+            ? `${completed} / 8 completed · ${photos.length} saved`
+            : `${photos.length} / 8 photos saved`;
+      }
+
+      $("create").onclick = async () => {
+        try {
+          if (socket) {
+            socket.onclose = null;
+            socket.close();
+          }
+
+          mode = $("mode").value;
+
+          const response = await fetch(`${API}/sessions`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ mode }),
+          });
+
+          if (!response.ok) {
+            throw new Error("Could not create session");
+          }
+
+          const data = await response.json();
+
+          sessionId = data.sessionId;
+          cameras = [];
+          busy = false;
+          completed = 0;
+          currentRequest = 0;
+
+          $("sessionId").textContent = sessionId;
+          $("copy").disabled = false;
+          $("gallery").innerHTML = "";
+          $("status").textContent = "Waiting for cameras...";
+
+          renderCameras();
+          await loadPhotos();
+
+          const ws = new WebSocket("ws://localhost:3000");
+          socket = ws;
+
+          ws.onopen = () => {
+            ws.send(
+              JSON.stringify({
+                type: "JOIN",
+                role: "controller",
+                sessionId,
+              }),
+            );
+            updateButton();
+          };
+
+          ws.onmessage = async (event) => {
+            const msg = JSON.parse(event.data);
+
+            if (msg.type === "STATUS") {
+              cameras = msg.cameras;
+              busy = msg.busy;
+              completed = msg.completed;
+
+              renderCameras();
+              await loadPhotos();
+            }
+
+            if (msg.type === "CAPTURE_STARTED") {
+              busy = true;
+              currentRequest = msg.shotNumber;
+
+              $("status").textContent = `Capturing shot ${msg.shotNumber}...`;
+
+              updateButton();
+            }
+
+            if (msg.type === "PHOTO_SAVED") {
+              $("status").textContent = `Photo saved: ${msg.photo.cameraId}`;
+
+              await loadPhotos();
+            }
+
+            if (msg.type === "CAPTURE_COMPLETED") {
+              busy = false;
+              completed = msg.shotNumber;
+
+              $("status").textContent =
+                `Capture completed: ${msg.received}/${msg.expected}`;
+
+              await loadPhotos();
+              updateButton();
+            }
+
+            if (msg.type === "CAPTURE_FAILED") {
+              busy = false;
+
+              $("status").textContent =
+                `Capture failed: ${msg.message} (${msg.received}/${msg.expected})`;
+
+              await loadPhotos();
+              updateButton();
+            }
+
+            if (msg.type === "ERROR") {
+              busy = false;
+              $("status").textContent = msg.message;
+              updateButton();
+            }
+          };
+
+          ws.onclose = () => {
+            if (socket !== ws) return;
+
+            cameras = [];
+            busy = false;
+            $("status").textContent = "Controller disconnected";
+            renderCameras();
+          };
+        } catch (error) {
+          $("status").textContent = error.message;
+        }
+      };
+
+      $("capture").onclick = () => {
+        if (busy || $("capture").disabled) return;
+
+        busy = true;
+        updateButton();
+
+        socket.send(
+          JSON.stringify({
+            type: mode === "sequential" ? "CAPTURE_ONE" : "CAPTURE_ALL",
+          }),
+        );
+      };
+
+      $("copy").onclick = async () => {
+        try {
+          await navigator.clipboard.writeText(sessionId);
+        } catch {
+          window.prompt("Copy Session ID:", sessionId);
+        }
+      };
+
+      renderCameras();
+    </script>
+  </body>
+</html>

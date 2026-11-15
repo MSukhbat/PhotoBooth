@@ -1,0 +1,162 @@
+[
+  {
+    "photoId": "ea793483-c26d-4a26-8543-b537ae4e4853",
+    "sessionId": "93cc7cba-b408-45b9-a527-a949998b6cdb",
+    "cameraId": "CAM1",
+    "requestId": "17a13142-6657-4282-a936-c69c38a07045",
+    "shotNumber": 1,
+    "capturedAt": "2026-11-15T15:07:17.293Z",
+    "uploadedAt": "2026-11-15T15:07:22.869Z",
+    "url": "/uploads/4628de1b-72d2-49ed-9101-97620bcc3630.jpg"
+  },
+  {
+    "photoId": "72a46424-4230-4f67-9535-52c08ad224e7",
+    "sessionId": "93cc7cba-b408-45b9-a527-a949998b6cdb",
+    "cameraId": "CAM1",
+    "requestId": "756ef5bc-f925-42f4-b78e-4ac6ca47e790",
+    "shotNumber": 2,
+    "capturedAt": "2026-11-15T15:07:23.273Z",
+    "uploadedAt": "2026-11-15T15:07:27.340Z",
+    "url": "/uploads/6443554d-5789-442b-b3a8-5c575254a8f8.jpg"
+  },
+  {
+    "photoId": "6d054314-0585-4580-a07c-ea55e34c7eee",
+    "sessionId": "93cc7cba-b408-45b9-a527-a949998b6cdb",
+    "cameraId": "CAM1",
+    "requestId": "c0bcadd6-9174-4478-866f-374504ad9081",
+    "shotNumber": 3,
+    "capturedAt": "2026-11-15T15:07:26.208Z",
+    "uploadedAt": "2026-11-15T15:07:30.119Z",
+    "url": "/uploads/15083814-8383-4090-a3cf-453cd2510920.jpg"
+  },
+  {
+    "photoId": "6f9065ff-6232-4807-aed2-07bc770d9e15",
+    "sessionId": "93cc7cba-b408-45b9-a527-a949998b6cdb",
+    "cameraId": "CAM1",
+    "requestId": "7085d540-3898-421e-969b-30b1397bb1d4",
+    "shotNumber": 4,
+    "capturedAt": "2026-11-15T15:07:28.421Z",
+    "uploadedAt": "2026-11-15T15:07:32.762Z",
+    "url": "/uploads/b803449b-58a2-484d-bf27-fa6fd32c419d.jpg"
+  },
+  {
+    "photoId": "e7bd9090-fa3d-4953-88d4-a7cdc3a9aff0",
+    "sessionId": "93cc7cba-b408-45b9-a527-a949998b6cdb",
+    "cameraId": "CAM1",
+    "requestId": "3eefa3fd-629c-40c4-9710-176b96a05f0e",
+    "shotNumber": 5,
+    "capturedAt": "2026-11-15T15:07:31.043Z",
+    "uploadedAt": "2026-11-15T15:07:34.880Z",
+    "url": "/uploads/69a17087-ada8-4a80-bbd0-0a51fbef299b.jpg"
+  },
+  {
+    "photoId": "425f7d90-59eb-47da-b35d-002bcbc24e78",
+    "sessionId": "93cc7cba-b408-45b9-a527-a949998b6cdb",
+    "cameraId": "CAM1",
+    "requestId": "bcc876d9-affe-4a3b-9ad6-ed29258dabaa",
+    "shotNumber": 6,
+    "capturedAt": "2026-11-15T15:07:33.338Z",
+    "uploadedAt": "2026-11-15T15:07:37.247Z",
+    "url": "/uploads/dabc2bb6-1199-4745-aa9b-17099ff69b9e.jpg"
+  },
+  {
+    "photoId": "cb44a85b-b252-4e0b-87e8-60f90619275a",
+    "sessionId": "93cc7cba-b408-45b9-a527-a949998b6cdb",
+    "cameraId": "CAM1",
+    "requestId": "889e3a0c-e577-4c6b-88a3-11848beac39e",
+    "shotNumber": 7,
+    "capturedAt": "2026-11-15T15:07:35.550Z",
+    "uploadedAt": "2026-11-15T15:07:39.482Z",
+    "url": "/uploads/d796c5bc-a0a2-49f1-9f8f-b75568bf1aee.jpg"
+  },
+  {
+    "photoId": "a65dd1bd-e2d8-4ba8-9c41-00bcf185a046",
+    "sessionId": "93cc7cba-b408-45b9-a527-a949998b6cdb",
+    "cameraId": "CAM1",
+    "requestId": "5fcd953f-2b0d-4ff6-89cc-eed7e0e6a314",
+    "shotNumber": 8,
+    "capturedAt": "2026-11-15T15:07:37.752Z",
+    "uploadedAt": "2026-11-15T15:07:42.328Z",
+    "url": "/uploads/a123f024-be5d-415f-acf2-edc448e4cbce.jpg"
+  },
+  {
+    "photoId": "241b445f-dc2d-4c49-b79e-68c2fcf9a5fa",
+    "sessionId": "2bacbe59-6e71-4fba-b6b3-f595eab22b74",
+    "cameraId": "CAM3",
+    "requestId": "e34c2f15-85b8-46b4-bf5c-44d3bbbce7db",
+    "shotNumber": 1,
+    "capturedAt": "2026-11-15T15:29:54.976Z",
+    "uploadedAt": "2026-11-15T15:29:55.311Z",
+    "url": "/uploads/e32ab65a-712c-467f-bc94-844241b12db4.jpg"
+  },
+  {
+    "photoId": "847c5377-95f9-4157-8bd8-4a679b0804bd",
+    "sessionId": "2bacbe59-6e71-4fba-b6b3-f595eab22b74",
+    "cameraId": "CAM5",
+    "requestId": "e34c2f15-85b8-46b4-bf5c-44d3bbbce7db",
+    "shotNumber": 1,
+    "capturedAt": "2026-11-15T15:29:54.991Z",
+    "uploadedAt": "2026-11-15T15:29:55.313Z",
+    "url": "/uploads/d855d2a5-9ac1-492b-9279-6102826f1af1.jpg"
+  },
+  {
+    "photoId": "961377bb-b51a-4e45-a397-38ba250be4d5",
+    "sessionId": "2bacbe59-6e71-4fba-b6b3-f595eab22b74",
+    "cameraId": "CAM4",
+    "requestId": "e34c2f15-85b8-46b4-bf5c-44d3bbbce7db",
+    "shotNumber": 1,
+    "capturedAt": "2026-11-15T15:29:54.983Z",
+    "uploadedAt": "2026-11-15T15:29:55.316Z",
+    "url": "/uploads/7f3003bb-30cb-48d7-af51-3da4c7d1b634.jpg"
+  },
+  {
+    "photoId": "0165795c-b465-45dc-9209-a9baa07794f7",
+    "sessionId": "2bacbe59-6e71-4fba-b6b3-f595eab22b74",
+    "cameraId": "CAM2",
+    "requestId": "e34c2f15-85b8-46b4-bf5c-44d3bbbce7db",
+    "shotNumber": 1,
+    "capturedAt": "2026-11-15T15:29:54.958Z",
+    "uploadedAt": "2026-11-15T15:29:55.318Z",
+    "url": "/uploads/76511452-9dc6-4571-b911-71711689adfa.jpg"
+  },
+  {
+    "photoId": "b8d7ca8b-c4bf-4ae3-8d62-5f0a0323a9e8",
+    "sessionId": "2bacbe59-6e71-4fba-b6b3-f595eab22b74",
+    "cameraId": "CAM8",
+    "requestId": "e34c2f15-85b8-46b4-bf5c-44d3bbbce7db",
+    "shotNumber": 1,
+    "capturedAt": "2026-11-15T15:29:55.024Z",
+    "uploadedAt": "2026-11-15T15:29:55.321Z",
+    "url": "/uploads/fcd82df8-fb1e-42da-b3b0-1ff389567950.jpg"
+  },
+  {
+    "photoId": "89a6d099-0f80-4ca3-9f7e-382c80ba3b74",
+    "sessionId": "2bacbe59-6e71-4fba-b6b3-f595eab22b74",
+    "cameraId": "CAM7",
+    "requestId": "e34c2f15-85b8-46b4-bf5c-44d3bbbce7db",
+    "shotNumber": 1,
+    "capturedAt": "2026-11-15T15:29:55.007Z",
+    "uploadedAt": "2026-11-15T15:29:55.324Z",
+    "url": "/uploads/250cbd19-15a7-4881-9394-1f7e919ce8c6.jpg"
+  },
+  {
+    "photoId": "e87b07b8-a621-40e3-8fd1-00937169485a",
+    "sessionId": "2bacbe59-6e71-4fba-b6b3-f595eab22b74",
+    "cameraId": "CAM6",
+    "requestId": "e34c2f15-85b8-46b4-bf5c-44d3bbbce7db",
+    "shotNumber": 1,
+    "capturedAt": "2026-11-15T15:29:54.999Z",
+    "uploadedAt": "2026-11-15T15:29:55.327Z",
+    "url": "/uploads/acd77b3b-d5b1-48f3-8847-e6cd95a85109.jpg"
+  },
+  {
+    "photoId": "91f20bae-5920-480a-997f-1e774809d1e1",
+    "sessionId": "2bacbe59-6e71-4fba-b6b3-f595eab22b74",
+    "cameraId": "CAM1",
+    "requestId": "e34c2f15-85b8-46b4-bf5c-44d3bbbce7db",
+    "shotNumber": 1,
+    "capturedAt": "2026-11-15T15:29:53.327Z",
+    "uploadedAt": "2026-11-15T15:29:59.743Z",
+    "url": "/uploads/2fd799d7-ea69-4ec8-b02a-377be92ded95.jpg"
+  }
+]
