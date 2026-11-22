@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="mn">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>Photobooth Web Camera</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <h1>Photobooth Camera</h1>
+      <p class="muted">Safari / Chrome • HTTPS</p>
+      <div class="panel">
+        <label for="session">Session ID</label
+        ><input
+          id="session"
+          placeholder="Controller-оос хуулсан Session ID"
+          autocomplete="off"
+        />
+        <label for="camera">Camera ID</label
+        ><select id="camera">
+          <option>CAM1</option>
+          <option>CAM2</option>
+          <option>CAM3</option>
+          <option>CAM4</option>
+          <option>CAM5</option>
+          <option>CAM6</option>
+          <option>CAM7</option>
+          <option>CAM8</option>
+        </select>
+        <label for="lens">Camera</label
+        ><select id="lens">
+          <option value="environment">Back camera</option>
+          <option value="user">Front camera</option>
+        </select>
+        <button id="connect">Start camera & connect</button>
+      </div>
+      <div class="preview">
+        <video id="video" autoplay playsinline muted></video
+        ><span id="indicator">OFFLINE</span>
+      </div>
+      <div class="panel">
+        <strong id="status">Session ID оруулаад камераа асаана уу.</strong>
+        <p id="details" class="muted">
+          Зураг авах командыг Controller-оос хүлээн авна.
+        </p>
+        <button id="disconnect" disabled>Disconnect</button>
+      </div>
+      <canvas id="canvas" hidden></canvas>
+    </main>
+  </body>
+</html>

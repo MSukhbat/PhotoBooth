@@ -13,6 +13,7 @@ const wss = new WebSocket.Server({ server });
 
 app.use(cors());
 app.use(express.json());
+app.use("/camera", express.static(path.join(__dirname, "..", "camera-web")));
 
 const uploadsDir = path.join(__dirname, "uploads");
 const dataDir = path.join(__dirname, "data");

@@ -158,5 +158,85 @@
     "capturedAt": "2026-11-15T15:29:53.327Z",
     "uploadedAt": "2026-11-15T15:29:59.743Z",
     "url": "/uploads/2fd799d7-ea69-4ec8-b02a-377be92ded95.jpg"
+  },
+  {
+    "photoId": "2eea778c-b7ef-4b0c-85b2-6fcedaf9656d",
+    "sessionId": "356263a0-ba92-43d3-9355-a143cb0e0784",
+    "cameraId": "CAM5",
+    "requestId": "f5d16871-515f-4e89-a637-8a2003459d7a",
+    "shotNumber": 1,
+    "capturedAt": "2026-11-22T12:29:06.738Z",
+    "uploadedAt": "2026-11-22T12:29:06.889Z",
+    "url": "/uploads/de35636f-f22a-414f-bd8b-c4c8c6fa34aa.jpg"
+  },
+  {
+    "photoId": "e43a4081-8e4b-4167-b669-ecd46cadecac",
+    "sessionId": "356263a0-ba92-43d3-9355-a143cb0e0784",
+    "cameraId": "CAM2",
+    "requestId": "f5d16871-515f-4e89-a637-8a2003459d7a",
+    "shotNumber": 1,
+    "capturedAt": "2026-11-22T12:29:06.719Z",
+    "uploadedAt": "2026-11-22T12:29:06.891Z",
+    "url": "/uploads/97ba1ebf-0778-44a3-8443-07a7cb8ae398.jpg"
+  },
+  {
+    "photoId": "206e5faf-8983-4e88-9f08-b9c8938b0c72",
+    "sessionId": "356263a0-ba92-43d3-9355-a143cb0e0784",
+    "cameraId": "CAM3",
+    "requestId": "f5d16871-515f-4e89-a637-8a2003459d7a",
+    "shotNumber": 1,
+    "capturedAt": "2026-11-22T12:29:06.687Z",
+    "uploadedAt": "2026-11-22T12:29:06.894Z",
+    "url": "/uploads/cdd8f99c-df5f-4daa-8ab1-37323aae9a0a.jpg"
+  },
+  {
+    "photoId": "553723be-831a-4782-8a9b-9a02f57faf00",
+    "sessionId": "356263a0-ba92-43d3-9355-a143cb0e0784",
+    "cameraId": "CAM4",
+    "requestId": "f5d16871-515f-4e89-a637-8a2003459d7a",
+    "shotNumber": 1,
+    "capturedAt": "2026-11-22T12:29:06.754Z",
+    "uploadedAt": "2026-11-22T12:29:06.897Z",
+    "url": "/uploads/cbd651c9-6e75-44ba-9c46-eaebc2d7d84c.jpg"
+  },
+  {
+    "photoId": "94580d35-50ee-43e0-9791-109a6e688571",
+    "sessionId": "356263a0-ba92-43d3-9355-a143cb0e0784",
+    "cameraId": "CAM7",
+    "requestId": "f5d16871-515f-4e89-a637-8a2003459d7a",
+    "shotNumber": 1,
+    "capturedAt": "2026-11-22T12:29:06.769Z",
+    "uploadedAt": "2026-11-22T12:29:06.901Z",
+    "url": "/uploads/3d994d1a-20a6-4ca9-a1ba-80c8a908b2c4.jpg"
+  },
+  {
+    "photoId": "ae691d8f-bfe2-47a2-b7e7-6fff0a3bb11f",
+    "sessionId": "356263a0-ba92-43d3-9355-a143cb0e0784",
+    "cameraId": "CAM6",
+    "requestId": "f5d16871-515f-4e89-a637-8a2003459d7a",
+    "shotNumber": 1,
+    "capturedAt": "2026-11-22T12:29:06.785Z",
+    "uploadedAt": "2026-11-22T12:29:06.903Z",
+    "url": "/uploads/1b755bb4-9a89-4b3a-923d-c22eb789e77f.jpg"
+  },
+  {
+    "photoId": "bb2abcf0-e431-420e-a569-747a9adc5aba",
+    "sessionId": "356263a0-ba92-43d3-9355-a143cb0e0784",
+    "cameraId": "CAM8",
+    "requestId": "f5d16871-515f-4e89-a637-8a2003459d7a",
+    "shotNumber": 1,
+    "capturedAt": "2026-11-22T12:29:06.793Z",
+    "uploadedAt": "2026-11-22T12:29:06.908Z",
+    "url": "/uploads/f797259c-9ffd-4b04-92d2-972fab81568b.jpg"
+  },
+  {
+    "photoId": "09c8fed1-2956-46b6-83ab-7a0130b30097",
+    "sessionId": "356263a0-ba92-43d3-9355-a143cb0e0784",
+    "cameraId": "CAM1",
+    "requestId": "f5d16871-515f-4e89-a637-8a2003459d7a",
+    "shotNumber": 1,
+    "capturedAt": "2026-11-22T12:28:56.696Z",
+    "uploadedAt": "2026-11-22T12:29:08.405Z",
+    "url": "/uploads/f4daa42d-6967-429e-94c7-59278fcaa040.jpg"
   }
 ]
