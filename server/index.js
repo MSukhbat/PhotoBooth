@@ -39,15 +39,11 @@ fs.mkdirSync(dataDir, { recursive: true });
 let photos = [];
 
 if (fs.existsSync(photosFile)) {
-
   photos = JSON.parse(fs.readFileSync(photosFile, "utf8"));
-
 }
 
 function savePhotos() {
-
   fs.writeFileSync(photosFile, JSON.stringify(photos, null, 2));
-
 }
 // Түр зуурын session-ууд (сервер restart хийхэд арилна)
 
@@ -56,78 +52,61 @@ const sessions = new Map();
 const clients = new Map();
 
 function send(ws, message) {
-
   if (ws && ws.readyState === WebSocket.OPEN) {
-
     ws.send(JSON.stringify(message));
-
   }
-
 }
 
 function broadcast(sessionId, message) {
-
   for (const [ws, client] of clients) {
-
     if (client.sessionId === sessionId) {
-
       send(ws, message);
-
     }
-
   }
-
 }
 
 function getCameras(sessionId) {
-
   const result = [];
 
   for (const [ws, client] of clients) {
-
     if (
-
       client.role === "camera" &&
-
       client.sessionId === sessionId &&
-
       ws.readyState === WebSocket.OPEN
-
     ) {
-
       result.push({ ws, ...client });
-
     }
-
   }
 
   return result;
-
 }
 
 function getSessionPhotos(sessionId) {
-
   return photos.filter((photo) => photo.sessionId === sessionId);
-
 }
 
 function getVirtualCameras(session) {
   if (session.mode !== "hybrid") return [];
-  return Array.from({ length: 8 - session.realCount }, (_, index) => ({
-    cameraId: `CAM${session.realCount + index + 1}`,
-    ready: true,
-    virtual: true,
-  }));
+
+  const result = [];
+
+  for (let i = session.realCount + 1; i <= 8; i++) {
+    result.push({
+      cameraId: `CAM${i}`,
+      ready: true,
+      virtual: true,
+    });
+  }
+
+  return result;
 }
 
 function sendStatus(sessionId) {
-
   const session = sessions.get(sessionId);
 
   if (!session) return;
 
   broadcast(sessionId, {
-
     type: "STATUS",
 
     mode: session.mode,
@@ -136,22 +115,20 @@ function sendStatus(sessionId) {
 
     busy: Boolean(session.pending),
 
-    cameras: getCameras(sessionId).map((camera) => ({
-
-      cameraId: camera.cameraId,
-
-      ready: camera.ready,
-
-    })),
+    cameras: [
+      ...getCameras(sessionId).map((camera) => ({
+        cameraId: camera.cameraId,
+        ready: camera.ready,
+        virtual: false,
+      })),
+      ...getVirtualCameras(session),
+    ],
 
     photoCount: getSessionPhotos(sessionId).length,
-
   });
-
 }
 
 function finishCapture(session, reason = null) {
-
   const job = session.pending;
 
   if (!job) return;
@@ -163,14 +140,12 @@ function finishCapture(session, reason = null) {
   const expected = job.expected.size;
 
   session.pending = null;
-// Зөвхөн бүрэн амжилттай capture-г тоолно
+  // Зөвхөн бүрэн амжилттай capture-г тоолно
 
   if (received === expected && !reason) {
-
     session.completed++;
 
     broadcast(session.id, {
-
       type: "CAPTURE_COMPLETED",
 
       requestId: job.requestId,
@@ -180,13 +155,9 @@ function finishCapture(session, reason = null) {
       received,
 
       expected,
-
     });
-
   } else {
-
     broadcast(session.id, {
-
       type: "CAPTURE_FAILED",
 
       requestId: job.requestId,
@@ -198,13 +169,10 @@ function finishCapture(session, reason = null) {
       expected,
 
       message: reason || "Incomplete capture",
-
     });
-
   }
 
   sendStatus(session.id);
-
 }
 function saveVirtualPhotos(session, job) {
   if (session.mode !== "hybrid") return;
@@ -214,10 +182,15 @@ function saveVirtualPhotos(session, job) {
     const filename = crypto.randomUUID() + ".jpg";
     fs.copyFileSync(template, path.join(uploadsDir, filename));
     const photo = {
-      photoId: crypto.randomUUID(), sessionId: session.id, cameraId,
-      requestId: job.requestId, shotNumber: job.shotNumber,
-      capturedAt: new Date().toISOString(), uploadedAt: new Date().toISOString(),
-      url: `/uploads/${filename}`, virtual: true,
+      photoId: crypto.randomUUID(),
+      sessionId: session.id,
+      cameraId,
+      requestId: job.requestId,
+      shotNumber: job.shotNumber,
+      capturedAt: new Date().toISOString(),
+      uploadedAt: new Date().toISOString(),
+      url: `/uploads/${filename}`,
+      virtual: true,
     };
     photos.push(photo);
     job.received.add(cameraId);
@@ -233,9 +206,12 @@ app.post("/sessions", (req, res) => {
   if (!["sequential", "simultaneous", "hybrid"].includes(mode)) {
     return res.status(400).json({ error: "Invalid mode" });
   }
-  const realCount = mode === "hybrid" ? req.body.realCount : mode === "sequential" ? 1 : 8;
+  const realCount =
+    mode === "hybrid" ? req.body.realCount : mode === "sequential" ? 1 : 8;
   if (!Number.isInteger(realCount) || realCount < 1 || realCount > 8) {
-    return res.status(400).json({ error: "realCount must be an integer from 1 to 8" });
+    return res
+      .status(400)
+      .json({ error: "realCount must be an integer from 1 to 8" });
   }
   const id = crypto.randomUUID();
   sessions.set(id, { id, mode, realCount, completed: 0, pending: null });
@@ -246,48 +222,35 @@ app.post("/sessions", (req, res) => {
 // Зургийн жагсаалт
 
 app.get("/sessions/:id/photos", (req, res) => {
-
   res.json(getSessionPhotos(req.params.id));
-
 });
 // Upload тохиргоо
 
 const storage = multer.diskStorage({
-
   destination: (req, file, cb) => cb(null, uploadsDir),
 
   filename: (req, file, cb) => {
-
     cb(null, crypto.randomUUID() + ".jpg");
-
   },
-
 });
 
 const upload = multer({
-
   storage,
 
   limits: { fileSize: 20 * 1024 * 1024 },
 
   fileFilter: (req, file, cb) => {
-
     if (file.mimetype !== "image/jpeg") {
-
       return cb(new Error("Only JPEG allowed"));
-
     }
 
     cb(null, true);
-
   },
-
 });
 
 app.use("/uploads", express.static(uploadsDir));
 
 app.post("/upload", upload.single("photo"), (req, res) => {
-
   const { sessionId, cameraId, requestId, capturedAt } = req.body;
 
   const session = sessions.get(sessionId);
@@ -295,31 +258,21 @@ app.post("/upload", upload.single("photo"), (req, res) => {
   const job = session?.pending;
 
   const valid =
-
     req.file &&
-
     job &&
-
     job.requestId === requestId &&
-
     job.expected.has(cameraId) &&
-
     !job.received.has(cameraId);
 
   if (!valid) {
-
     if (req.file) fs.unlinkSync(req.file.path);
 
     return res.status(400).json({
-
       error: "Invalid or expired capture",
-
     });
-
   }
 
   const photo = {
-
     photoId: crypto.randomUUID(),
 
     sessionId,
@@ -335,7 +288,6 @@ app.post("/upload", upload.single("photo"), (req, res) => {
     uploadedAt: new Date().toISOString(),
 
     url: `/uploads/${req.file.filename}`,
-
   };
 
   photos.push(photo);
@@ -347,119 +299,89 @@ app.post("/upload", upload.single("photo"), (req, res) => {
   console.log("Photo saved:", cameraId, req.file.filename);
 
   broadcast(sessionId, {
-
     type: "PHOTO_SAVED",
 
     photo,
-
   });
 
   res.json({ success: true, photo });
 
   if (job.received.size === job.expected.size) {
-
     finishCapture(session);
-
   }
-
 });
 // WebSocket
 
 wss.on("connection", (ws) => {
-
   console.log("WebSocket connected");
 
   ws.on("message", (raw) => {
-
     let msg;
 
     try {
-
       msg = JSON.parse(raw.toString());
-
     } catch {
-
       return send(ws, {
-
         type: "ERROR",
 
         message: "Invalid JSON",
-
       });
-
     }
-// Session-д нэгдэх
+    // Session-д нэгдэх
 
     if (msg.type === "JOIN") {
-
       const session = sessions.get(msg.sessionId);
 
       if (!session) {
-
         return send(ws, {
-
           type: "ERROR",
 
           message: "Session not found",
-
         });
-
       }
 
       if (!["camera", "controller"].includes(msg.role)) {
-
         return send(ws, {
-
           type: "ERROR",
 
           message: "Invalid role",
-
         });
-
       }
 
       if (msg.role === "camera") {
-        if (session.mode === "hybrid" && /^CAM[1-8]$/.test(msg.cameraId || "") && Number(msg.cameraId.slice(3)) > session.realCount) {
-          return send(ws, { type: "ERROR", message: `Real cameras must be CAM1 to CAM${session.realCount}` });
+        if (
+          session.mode === "hybrid" &&
+          /^CAM[1-8]$/.test(msg.cameraId || "") &&
+          Number(msg.cameraId.slice(3)) > session.realCount
+        ) {
+          return send(ws, {
+            type: "ERROR",
+            message: `Real cameras must be CAM1 to CAM${session.realCount}`,
+          });
         }
 
-
         if (!/^CAM[1-8]$/.test(msg.cameraId || "")) {
-
           return send(ws, {
-
             type: "ERROR",
 
             message: "Camera ID must be CAM1 to CAM8",
-
           });
-
         }
 
         if (
-
           getCameras(msg.sessionId).some(
-
             (camera) => camera.cameraId === msg.cameraId,
-
           )
-
         ) {
-
           return send(ws, {
-
             type: "ERROR",
 
             message: "Camera ID already connected",
-
           });
-
         }
-
       }
 
       clients.set(ws, {
-
         role: msg.role,
 
         sessionId: msg.sessionId,
@@ -467,7 +389,6 @@ wss.on("connection", (ws) => {
         cameraId: msg.role === "camera" ? msg.cameraId : null,
 
         ready: false,
-
       });
 
       send(ws, { type: "JOINED" });
@@ -475,7 +396,6 @@ wss.on("connection", (ws) => {
       sendStatus(msg.sessionId);
 
       return;
-
     }
 
     const client = clients.get(ws);
@@ -485,94 +405,90 @@ wss.on("connection", (ws) => {
     const session = sessions.get(client.sessionId);
 
     if (!session) return;
-// Утас бэлэн
+    // Утас бэлэн
 
     if (msg.type === "CAMERA_READY" && client.role === "camera") {
-
       client.ready = true;
 
       sendStatus(client.sessionId);
 
       return;
-
     }
-// Capture алдаа
+    // Capture алдаа
 
     if (msg.type === "CAPTURE_ERROR" && client.role === "camera") {
-
       if (session.pending && session.pending.requestId === msg.requestId) {
-
         finishCapture(session, msg.message || "Camera error");
-
       }
 
       return;
-
     }
-// Зураг авах команд
+    // Зураг авах команд
 
     if (
-
       ["CAPTURE_ONE", "CAPTURE_ALL"].includes(msg.type) &&
-
       client.role === "controller"
-
     ) {
-
       if (session.pending) {
-
         return send(ws, {
-
           type: "ERROR",
 
           message: "Capture already in progress",
-
         });
-
       }
 
       const isSequential = session.mode === "sequential";
 
       if (
-
         (isSequential && msg.type !== "CAPTURE_ONE") ||
-
         (!isSequential && msg.type !== "CAPTURE_ALL")
-
       ) {
-
         return send(ws, {
-
           type: "ERROR",
 
           message: "Wrong command for session mode",
-
         });
-
       }
 
       const maxShots = isSequential ? 8 : 1;
 
       if (session.completed >= maxShots) {
-
         return send(ws, {
-
           type: "ERROR",
 
           message: "Session already completed",
-
         });
-
       }
 
       const connected = getCameras(session.id);
-      const expectedCount = isSequential ? 1 : session.mode === "hybrid" ? session.realCount : 8;
-      const expectedIds = Array.from({ length: expectedCount }, (_, i) => `CAM${i + 1}`);
-      if (connected.length !== expectedCount || !expectedIds.every(id => connected.some(c => c.cameraId === id && c.ready))) {
-        return send(ws, { type: "ERROR", message: `Need CAM1 to CAM${expectedCount} ready` });
+      const expectedCount = isSequential
+        ? 1
+        : session.mode === "hybrid"
+          ? session.realCount
+          : 8;
+      const expectedIds = Array.from(
+        { length: expectedCount },
+        (_, i) => `CAM${i + 1}`,
+      );
+      if (
+        connected.length !== expectedCount ||
+        !expectedIds.every((id) =>
+          connected.some((c) => c.cameraId === id && c.ready),
+        )
+      ) {
+        return send(ws, {
+          type: "ERROR",
+          message: `Need CAM1 to CAM${expectedCount} ready`,
+        });
       }
-      if (session.mode === "hybrid" && !fs.existsSync(path.join(__dirname, "test-photo.jpg"))) {
-        return send(ws, { type: "ERROR", message: "Missing server/test-photo.jpg" });
+      if (
+        session.mode === "hybrid" &&
+        !fs.existsSync(path.join(__dirname, "test-photo.jpg"))
+      ) {
+        return send(ws, {
+          type: "ERROR",
+          message: "Missing server/test-photo.jpg",
+        });
       }
 
       const requestId = crypto.randomUUID();
@@ -580,51 +496,44 @@ wss.on("connection", (ws) => {
       const shotNumber = session.completed + 1;
 
       const job = {
-
         requestId,
 
         shotNumber,
 
-        expected: new Set(session.mode === "hybrid" ? Array.from({length:8},(_,i)=>`CAM${i+1}`) : connected.map((c) => c.cameraId)),
+        expected: new Set(
+          session.mode === "hybrid"
+            ? Array.from({ length: 8 }, (_, i) => `CAM${i + 1}`)
+            : connected.map((c) => c.cameraId),
+        ),
 
         received: new Set(),
 
         timer: null,
-
       };
 
       session.pending = job;
 
       job.timer = setTimeout(() => {
-
         if (session.pending === job) {
-
           finishCapture(session, "Capture timed out");
-
         }
-
       }, 30000);
 
       for (const camera of connected) {
-
         const cameraClient = clients.get(camera.ws);
 
         cameraClient.ready = false;
 
         send(camera.ws, {
-
           type: "CAPTURE",
 
           requestId,
 
           shotNumber,
-
         });
-
       }
 
       broadcast(session.id, {
-
         type: "CAPTURE_STARTED",
 
         requestId,
@@ -632,19 +541,15 @@ wss.on("connection", (ws) => {
         shotNumber,
 
         expected: job.expected.size,
-
       });
 
       sendStatus(session.id);
 
       return;
-
     }
-
   });
 
   ws.on("close", () => {
-
     const client = clients.get(ws);
 
     clients.delete(ws);
@@ -654,31 +559,20 @@ wss.on("connection", (ws) => {
     const session = sessions.get(client.sessionId);
 
     if (
-
       client.role === "camera" &&
-
       session?.pending &&
-
       session.pending.expected.has(client.cameraId) &&
-
       !session.pending.received.has(client.cameraId)
-
     ) {
-
       finishCapture(session, "Camera disconnected");
-
     }
 
     sendStatus(client.sessionId);
-
   });
-
 });
 
 const PORT = process.env.PORT || 3000;
 
 server.listen(PORT, "0.0.0.0", () => {
-
   console.log(`Camera server running on port ${PORT}`);
-
 });
