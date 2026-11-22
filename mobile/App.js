@@ -42,7 +42,9 @@ export default function App() {
   const settingsRef = useRef({});
 
   const [permission, requestPermission] = useCameraPermissions();
-  const [serverIp, setServerIp] = useState("192.168.1.78");
+  const [serverIp, setServerIp] = useState(
+    "https://photobooth-gmu1.onrender.com",
+  );
   const [sessionId, setSessionId] = useState("");
   const [cameraId, setCameraId] = useState("CAM1");
   const [connected, setConnected] = useState(false);
@@ -68,7 +70,7 @@ export default function App() {
     readyRef.current = true;
     setReady(true);
 
-    if (connected) {
+    if (socketRef.current?.readyState === WebSocket.OPEN) {
       send({ type: "CAMERA_READY" });
     }
   }
